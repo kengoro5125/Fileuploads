@@ -1,0 +1,997 @@
+<!-- Version 0.1.0 -->
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="AIクリエーター K.Asahiのポートフォリオサイト。生成AIを活用したWeb制作、画像生成、業務効率化ソリューションを提供します。">
+    <title>K.Asahi | AI Creator Portfolio</title>
+    
+    <!-- Google Fonts: Noto Sans JP for Japanese, Inter for English numbers/headings -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* =========================================
+           CSS Variables & Reset (Dark Mode)
+           ========================================= */
+        :root {
+            /* Colors - Dark Theme */
+            --color-primary: #6BE5B5; /* Bright Green - Neon like */
+            --color-primary-dark: #55C595;
+            --color-accent: #74B9FF; /* Light Blue */
+            
+            /* Backgrounds */
+            --color-bg: #121212;        /* Deep Dark Background */
+            --color-surface: #1C1C1C;   /* Section Backgrounds */
+            --color-card-bg: #252525;   /* Cards & Modals */
+            --color-header-bg: rgba(18, 18, 18, 0.9); /* Header Overlay */
+            --color-input-bg: #1F1F1F;  /* Form Inputs */
+
+            /* Text */
+            --color-text-main: #F1F2F6; /* Off-White */
+            --color-text-sub: #A4B0BE;  /* Light Gray */
+            
+            /* Borders & UI */
+            --color-border: #333333;
+            --color-error: #FF6B6B;     /* Brighter Red for Dark Mode */
+
+            /* Typography */
+            --font-base: "Inter", "Noto Sans JP", system-ui, -apple-system, sans-serif;
+            --font-heading: "Inter", "Noto Sans JP", system-ui, sans-serif;
+            
+            /* Spacing & Layout */
+            --max-width: 1100px;
+            --header-height: 80px;
+            --radius-sm: 4px;
+            --radius-md: 8px;
+            
+            /* Transitions */
+            --transition-fast: 0.2s ease;
+            --transition-smooth: 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            font-size: 16px;
+        }
+
+        body {
+            font-family: var(--font-base);
+            color: var(--color-text-main);
+            background-color: var(--color-bg);
+            line-height: 1.75;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+            transition: color var(--transition-fast);
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* Focus styles for Accessibility */
+        :focus-visible {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 4px;
+        }
+
+        /* =========================================
+           Utility Classes
+           ========================================= */
+        .container {
+            width: 90%;
+            max-width: var(--max-width);
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-family: var(--font-heading);
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+            position: relative;
+            display: inline-block;
+            color: var(--color-text-main);
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -10px;
+            width: 60px;
+            height: 4px;
+            background-color: var(--color-primary);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem 2.5rem;
+            font-weight: 600;
+            font-size: 1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            letter-spacing: 0.05em;
+        }
+
+        .btn-primary {
+            background-color: var(--color-primary);
+            color: #121212; /* Dark text on bright button for contrast */
+            box-shadow: 0 4px 12px rgba(107, 229, 181, 0.15);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--color-primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(107, 229, 181, 0.25);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 2px solid var(--color-text-main);
+            color: var(--color-text-main);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--color-text-main);
+            color: var(--color-bg);
+        }
+
+        /* Fade In Animation */
+        .fade-in-up {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease-out, transform 0.8s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+
+        .fade-in-up.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* =========================================
+           Header
+           ========================================= */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: var(--header-height);
+            background-color: var(--color-header-bg);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            border-bottom: 1px solid var(--color-border);
+            display: flex;
+            align-items: center;
+        }
+
+        .header__inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 90%;
+            max-width: var(--max-width);
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            color: var(--color-text-main);
+        }
+
+        .logo span {
+            color: var(--color-primary);
+        }
+
+        .nav__list {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav__link {
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--color-text-sub);
+            position: relative;
+        }
+
+        .nav__link:hover,
+        .nav__link.is-active {
+            color: var(--color-primary);
+        }
+
+        .nav__link.is-active::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            height: 2px;
+            background-color: var(--color-primary);
+        }
+
+        /* =========================================
+           Hero Section
+           ========================================= */
+        .hero {
+            height: 100vh;
+            min-height: 600px;
+            display: flex;
+            align-items: center;
+            position: relative;
+            /* Slightly more visible gradient for dark mode */
+            background: linear-gradient(135deg, rgba(107, 229, 181, 0.08) 0%, rgba(116, 185, 255, 0.08) 100%);
+            padding-top: var(--header-height);
+        }
+
+        .hero__content {
+            max-width: 800px;
+        }
+
+        .hero__sub {
+            display: block;
+            font-size: clamp(1rem, 2vw, 1.25rem);
+            color: var(--color-primary);
+            margin-bottom: 1rem;
+            font-weight: 500;
+            letter-spacing: 0.05em;
+        }
+
+        .hero__title {
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            font-weight: 700;
+            line-height: 1.1;
+            letter-spacing: -0.03em;
+            margin-bottom: 2rem;
+            color: var(--color-text-main);
+        }
+
+        .hero__title span {
+            background: linear-gradient(45deg, var(--color-primary), var(--color-accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero__actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2.5rem;
+        }
+
+        /* =========================================
+           About Section
+           ========================================= */
+        .section {
+            padding: 8rem 0;
+        }
+
+        .about__grid {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 4rem;
+            align-items: start;
+        }
+
+        .about__image {
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            background-color: var(--color-card-bg);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .about__image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s ease;
+        }
+        
+        .about__image:hover img {
+            transform: scale(1.05);
+        }
+
+        .about__info h3 {
+            font-size: 1.75rem;
+            margin-bottom: 0.5rem;
+            color: var(--color-text-main);
+        }
+
+        .about__role {
+            display: block;
+            color: var(--color-primary);
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+
+        .about__desc {
+            color: var(--color-text-sub);
+            margin-bottom: 2rem;
+            line-height: 1.8;
+        }
+
+        .skill__list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+        }
+
+        .skill__tag {
+            padding: 0.5rem 1rem;
+            background-color: var(--color-card-bg);
+            border: 1px solid var(--color-border);
+            border-radius: 4px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--color-text-main);
+        }
+
+        /* =========================================
+           Works Section
+           ========================================= */
+        .works {
+            background-color: var(--color-surface);
+        }
+
+        .works__grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .work-card {
+            background: var(--color-card-bg);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+            cursor: pointer;
+            border: 1px solid var(--color-border);
+        }
+
+        .work-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.4);
+            border-color: var(--color-primary);
+        }
+
+        .work-card__thumb {
+            width: 100%;
+            height: 200px;
+            background-color: #333;
+            overflow: hidden;
+        }
+
+        .work-card__thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .work-card__body {
+            padding: 1.5rem;
+        }
+
+        .work-card__title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--color-text-main);
+        }
+
+        .work-card__cat {
+            font-size: 0.85rem;
+            color: var(--color-primary);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Modal */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            backdrop-filter: blur(8px);
+        }
+
+        .modal.is-open {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal__content {
+            background-color: var(--color-card-bg);
+            width: 90%;
+            max-width: 700px;
+            max-height: 90vh;
+            overflow-y: auto;
+            border-radius: var(--radius-md);
+            padding: 2.5rem;
+            position: relative;
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+            border: 1px solid var(--color-border);
+            color: var(--color-text-main);
+        }
+
+        .modal.is-open .modal__content {
+            transform: translateY(0);
+        }
+
+        .modal__close {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--color-text-sub);
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: background-color 0.2s;
+        }
+
+        .modal__close:hover {
+            background-color: rgba(255,255,255,0.1);
+            color: var(--color-text-main);
+        }
+
+        .modal__body h4 {
+            margin: 1.5rem 0 0.5rem;
+            font-size: 1.1rem;
+            color: var(--color-text-main);
+            border-left: 3px solid var(--color-primary);
+            padding-left: 0.75rem;
+        }
+        
+        .modal__body ul {
+            list-style: disc;
+            margin-left: 1.5rem;
+            color: var(--color-text-sub);
+            margin-bottom: 1rem;
+        }
+
+        .modal__body p {
+            color: var(--color-text-sub);
+            margin-bottom: 1rem;
+        }
+
+        .modal__tech {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        /* =========================================
+           Contact Section
+           ========================================= */
+        .contact__wrapper {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            font-size: 0.9rem;
+            color: var(--color-text-main);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            background-color: var(--color-input-bg);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-sm);
+            font-family: inherit;
+            font-size: 1rem;
+            color: var(--color-text-main);
+            transition: border-color 0.2s;
+        }
+
+        .form-control::placeholder {
+            color: #555;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 1px var(--color-primary);
+        }
+        
+        .form-control.is-invalid {
+            border-color: var(--color-error);
+        }
+        
+        .error-message {
+            color: var(--color-error);
+            font-size: 0.8rem;
+            margin-top: 0.25rem;
+            display: none;
+        }
+        
+        .form-control.is-invalid + .error-message {
+            display: block;
+        }
+
+        .contact__sns {
+            margin-top: 3rem;
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid var(--color-border);
+            color: var(--color-text-sub);
+        }
+        
+        .sns-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+        
+        .sns-link {
+            width: 48px;
+            height: 48px;
+            background-color: var(--color-card-bg);
+            border: 1px solid var(--color-border);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--color-text-main);
+            font-weight: 700;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+        
+        .sns-link:hover {
+            background-color: var(--color-primary);
+            color: #121212;
+            border-color: var(--color-primary);
+        }
+
+        /* =========================================
+           Footer
+           ========================================= */
+        .footer {
+            padding: 2rem 0;
+            text-align: center;
+            color: var(--color-text-sub);
+            font-size: 0.85rem;
+            border-top: 1px solid var(--color-border);
+            background-color: var(--color-bg);
+        }
+
+        /* =========================================
+           Responsive
+           ========================================= */
+        @media (max-width: 768px) {
+            .section { padding: 5rem 0; }
+            .hero__title { font-size: 2.5rem; }
+            .about__grid { grid-template-columns: 1fr; gap: 2rem; }
+            .nav__list { display: none; } /* Mobile nav omitted for brevity, focus on layout */
+            
+            /* Simple mobile menu handling would go here */
+            .hero__actions { flex-direction: column; }
+            .btn { width: 100%; }
+        }
+
+        /* Prefers Reduced Motion */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header__inner">
+            <a href="#" class="logo">K.Asahi <span>.</span></a>
+            <nav class="nav">
+                <ul class="nav__list">
+                    <li><a href="#about" class="nav__link">About</a></li>
+                    <li><a href="#works" class="nav__link">Works</a></li>
+                    <li><a href="#contact" class="nav__link">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section id="hero" class="hero">
+            <div class="container">
+                <div class="hero__content fade-in-up">
+                    <span class="hero__sub">スピードと効率を両立したクオリティ</span>
+                    <h1 class="hero__title">
+                        生成AIで<br>
+                        <span>想像の限界</span>を超えていく
+                    </h1>
+                    <div class="hero__actions">
+                        <a href="#works" class="btn btn-primary">View Works</a>
+                        <a href="#contact" class="btn btn-outline">お問い合わせ</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="section">
+            <div class="container">
+                <h2 class="section-title fade-in-up">About</h2>
+                <div class="about__grid fade-in-up">
+                    <div class="about__image">
+                        <!-- Profile Image: Professional Portrait -->
+                        <img src="https://github.com/kengoro5125/imageupload/blob/main/Gemini_Generated_Image_erz31eerz31eerz3.png?raw=true" alt="K.Asahi Profile">
+                    </div>
+                    <div class="about__info">
+                        <h3>K.Asahi</h3>
+                        <span class="about__role">AI Creator / Front-end Engineer</span>
+                        <p class="about__desc">
+                            様々な生成AI（LLM, Image Gen, Voice Synthesis）を駆使し、
+                            従来の制作フローでは到達できなかったスピードとクオリティを両立します。
+                            単なる「出力」ではなく、ビジネスの課題解決に直結する「実装」までを一貫して担当。
+                            Web制作から業務効率化ツールの開発まで、技術とAIの架け橋となります。
+                        </p>
+                        <div class="skill__list">
+                            <span class="skill__tag">Gemini</span>
+                            <span class="skill__tag">ChatGPT</span>
+                            <span class="skill__tag">Claude</span>
+                            <span class="skill__tag">Midjourney</span>
+                            <span class="skill__tag">Canva</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Works Section -->
+        <section id="works" class="section works">
+            <div class="container">
+                <h2 class="section-title fade-in-up">Works</h2>
+                <div class="works__grid fade-in-up">
+                    <!-- JS will populate cards here -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="section">
+            <div class="container">
+                <h2 class="section-title fade-in-up">Contact</h2>
+                <div class="contact__wrapper fade-in-up">
+                    <form id="contactForm" novalidate>
+                        <div class="form-group">
+                            <label for="name" class="form-label">お名前</label>
+                            <input type="text" id="name" class="form-control" placeholder="例：山田 太郎" required>
+                            <div class="error-message">お名前を入力してください。</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="email" class="form-label">メールアドレス</label>
+                            <input type="email" id="email" class="form-control" placeholder="例：yourname@example.com" required>
+                            <div class="error-message">有効なメールアドレスを入力してください。</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="subject" class="form-label">件名</label>
+                            <input type="text" id="subject" class="form-control" placeholder="制作のご依頼について" required>
+                            <div class="error-message">件名を入力してください。</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="message" class="form-label">メッセージ</label>
+                            <textarea id="message" rows="5" class="form-control" placeholder="ご相談内容をご記入ください" required></textarea>
+                            <div class="error-message">メッセージを入力してください。</div>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="width:100%">送信する</button>
+                    </form>
+
+                    <div class="contact__sns">
+                        <p>SNSでも情報発信中</p>
+                        <div class="sns-links">
+                            <a href="#" class="sns-link">X</a>
+                            <a href="#" class="sns-link">Instagram</a>
+                            <a href="#" class="sns-link">Github</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 K.Asahi Portfolio. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Modal Template -->
+    <div id="projectModal" class="modal" aria-hidden="true">
+        <div class="modal__content" role="dialog" aria-modal="true">
+            <button class="modal__close" aria-label="閉じる">&times;</button>
+            <div class="modal__body" id="modalBody">
+                <!-- Content injected via JS -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            /* =========================================
+               Data: Works Items
+               ========================================= */
+            const worksData = [
+                {
+                    id: 1,
+                    title: "AI Image Gen LP",
+                    category: "Web Design / AI",
+                    image: "https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?auto=format&fit=crop&q=80&w=600",
+                    description: "画像生成AIサービスのプロモーションLP。FVの画像はすべてMidjourneyで生成し、近未来感を演出。",
+                    details: {
+                        problem: "新規サービスの認知拡大と、AIに対する「難しそう」というイメージの払拭。",
+                        approach: "専門用語を排除し、視覚的に「何ができるか」を伝える構成。マイクロインタラクションで先進性を表現。",
+                        scope: "構成 / デザイン / コーディング / 画像生成",
+                        tech: ["HTML/CSS", "Vanilla JS", "Midjourney"],
+                        result: "公開1ヶ月でCVR 3.5%を達成。"
+                    }
+                },
+                {
+                    id: 2,
+                    title: "Corporate Rebrand",
+                    category: "Coding",
+                    image: "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=600",
+                    description: "創業50年の製造業企業の公式サイトリニューアル。信頼感と革新性を両立したデザイン。",
+                    details: {
+                        problem: "サイトの老朽化による採用応募の減少。",
+                        approach: "社員インタビューを充実させ、働いている姿を連想させるコンテンツ設計。グリッドレイアウトで誠実さを表現。",
+                        scope: "情報設計 / コーディング (CMS組込)",
+                        tech: ["HTML/SCSS", "JavaScript", "WordPress"],
+                        result: "採用エントリー数が前年比200%増。"
+                    }
+                },
+                {
+                    id: 3,
+                    title: "Automated Dashboard",
+                    category: "App UI / GPTs",
+                    image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=600",
+                    description: "社内業務データを可視化するダッシュボードUI。ChatGPT APIを活用した要約機能を搭載。",
+                    details: {
+                        problem: "日報データの分析に時間がかかっていた。",
+                        approach: "必要な数値だけを一目で確認できるカード型UI。自然言語でデータをクエリできるインターフェースを提案。",
+                        scope: "UIデザイン / プロトタイピング",
+                        tech: ["Figma", "ChatGPT-4o", "React"],
+                        result: "管理職のレポート作成時間を週5時間削減。"
+                    }
+                }
+            ];
+
+            /* =========================================
+               1. Render Works Grid
+               ========================================= */
+            const worksGrid = document.querySelector('.works__grid');
+            
+            worksData.forEach(work => {
+                const card = document.createElement('article');
+                card.className = 'work-card fade-in-up';
+                card.innerHTML = `
+                    <div class="work-card__thumb">
+                        <img src="${work.image}" alt="${work.title}" loading="lazy">
+                    </div>
+                    <div class="work-card__body">
+                        <div class="work-card__cat">${work.category}</div>
+                        <h3 class="work-card__title">${work.title}</h3>
+                        <p style="font-size: 0.9rem; color: var(--color-text-sub);">${work.description}</p>
+                    </div>
+                `;
+                card.addEventListener('click', () => openModal(work));
+                worksGrid.appendChild(card);
+            });
+
+            /* =========================================
+               2. Intersection Observer (Fade In)
+               ========================================= */
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px 0px -100px 0px',
+                threshold: 0.1
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.fade-in-up').forEach(el => observer.observe(el));
+
+            /* =========================================
+               3. Active Nav Link on Scroll
+               ========================================= */
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('.nav__link');
+
+            window.addEventListener('scroll', () => {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    const sectionHeight = section.clientHeight;
+                    if (pageYOffset >= (sectionTop - 200)) {
+                        current = section.getAttribute('id');
+                    }
+                });
+
+                navLinks.forEach(link => {
+                    link.classList.remove('is-active');
+                    if (link.getAttribute('href').includes(current)) {
+                        link.classList.add('is-active');
+                    }
+                });
+            });
+
+            /* =========================================
+               4. Modal Logic
+               ========================================= */
+            const modal = document.getElementById('projectModal');
+            const modalBody = document.getElementById('modalBody');
+            const closeBtn = document.querySelector('.modal__close');
+
+            function openModal(work) {
+                // Generate Tech Tags
+                const techTags = work.details.tech.map(t => `<span class="skill__tag">${t}</span>`).join('');
+                
+                modalBody.innerHTML = `
+                    <div style="margin-bottom: 1.5rem;">
+                        <span style="color:var(--color-primary); font-weight:600; font-size:0.9rem;">${work.category}</span>
+                        <h2 style="font-size: 1.75rem; line-height:1.2; margin-top:0.25rem;">${work.title}</h2>
+                    </div>
+                    <img src="${work.image}" alt="${work.title}" style="width:100%; height:250px; object-fit:cover; border-radius:8px; margin-bottom:1.5rem;">
+                    
+                    <h4>課題</h4>
+                    <p>${work.details.problem}</p>
+                    
+                    <h4>解決アプローチ</h4>
+                    <p>${work.details.approach}</p>
+                    
+                    <h4>成果</h4>
+                    <p>${work.details.result}</p>
+                    
+                    <h4>担当範囲</h4>
+                    <p>${work.details.scope}</p>
+                    
+                    <h4>使用技術</h4>
+                    <div class="modal__tech">${techTags}</div>
+                `;
+                
+                modal.classList.add('is-open');
+                modal.setAttribute('aria-hidden', 'false');
+                document.body.style.overflow = 'hidden'; // Prevent background scroll
+            }
+
+            function closeModal() {
+                modal.classList.remove('is-open');
+                modal.setAttribute('aria-hidden', 'true');
+                document.body.style.overflow = '';
+            }
+
+            closeBtn.addEventListener('click', closeModal);
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) closeModal();
+            });
+            
+            // Escape key to close
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && modal.classList.contains('is-open')) {
+                    closeModal();
+                }
+            });
+
+            /* =========================================
+               5. Form Validation
+               ========================================= */
+            const form = document.getElementById('contactForm');
+            
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                let isValid = true;
+                
+                // Simple validation loop
+                const inputs = form.querySelectorAll('input, textarea');
+                inputs.forEach(input => {
+                    if (!input.value.trim() || (input.type === 'email' && !input.value.includes('@'))) {
+                        input.classList.add('is-invalid');
+                        isValid = false;
+                    } else {
+                        input.classList.remove('is-invalid');
+                    }
+                });
+
+                if (isValid) {
+                    // Show success state (Mock)
+                    const originalText = form.querySelector('button').innerText;
+                    const btn = form.querySelector('button');
+                    btn.innerText = "送信完了しました";
+                    btn.style.backgroundColor = "var(--color-primary-dark)";
+                    btn.disabled = true;
+                    
+                    form.reset();
+                    
+                    setTimeout(() => {
+                        btn.innerText = originalText;
+                        btn.style.backgroundColor = "";
+                        btn.disabled = false;
+                        alert('お問い合わせを受け付けました。\n（これはデモです。実際には送信されていません）');
+                    }, 2000);
+                }
+            });
+            
+            // Real-time validation removal
+            form.querySelectorAll('input, textarea').forEach(input => {
+                input.addEventListener('input', () => {
+                    if (input.classList.contains('is-invalid')) {
+                        input.classList.remove('is-invalid');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
